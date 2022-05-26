@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: local-client-provisioner
+  labels:
+    app: local-client-provisioner
+  # replace with namespace where provisioner is deployed
+  namespace: default
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: local-client-provisioner
+  template:
+    metadata:
+      labels:
+        app: local-client-provisioner
+    spec:
+      serviceAccountName: local-client-provisioner
+      containers:
+        - name: local-client-provisioner
+          image: 1331990870/local-subdir-external-provisioner:v0.1
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: local-client-root
+              mountPath: /persistentvolumes
+          env:
+            - name: ENABLE_LEADER_ELECTION
+              value: "false"
+            - name: PROVISIONER_NAME
+              value: k8s-sigs.io/local-subdir-external-provisioner
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: LOCAL_PATH
+              value: /data/kubernetes
+      volumes:
+        - name: local-client-root
+          hostPath:
+            path: /data/kubernetes
