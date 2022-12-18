@@ -10,7 +10,9 @@
 #### 快速使用
 
 ```shell
-kubectl apply -f deploy/local-subdir-external-provisioner.yaml
+kubectl apply -f deploy/rbac.yaml  # 创建权限
+kubectl apply -f deploy/local-subdir-external-provisioner.yaml # 部署
+
 ```
 
 
@@ -19,10 +21,10 @@ kubectl apply -f deploy/local-subdir-external-provisioner.yaml
 
 ```shell
 # 创建一个StorageClass
-kubectl apply -f samples/StorageClass.yaml
+kubectl apply -f deploy/samples/StorageClass.yaml
 
 # 创建pvc，创建pvc后会自动创建一个pv进行绑定
-kubectl apply -f samples/test-claim.yaml
+kubectl apply -f deploy/samples/test-claim.yaml
 ```
 
 
